@@ -1,0 +1,60 @@
+Separate App and Vendor Entries
+webpack.config.js
+
+module.exports = {
+  entry: {
+    main: './src/app.js',
+    vendor: './src/vendor.js'
+  }
+};
+webpack.prod.js
+
+module.exports = {
+  output: {
+    filename: '[name].[contentHash].bundle.js'
+  }
+};
+webpack.dev.js
+
+module.exports = {
+  output: {
+    filename: '[name].bundle.js'
+  }
+};
+What does this do? We are telling webpack that we would like 2 separate entry points (like the above example).
+
+Why? With this you can import required libraries or files that aren't modified (e.g. Bootstrap, jQuery, images, etc) inside vendor.js and they will be bundled together into their own chunk. Content hash remains the same, which allows the browser to cache them separately thereby reducing load time.
+
+In webpack version < 4 it was common to add vendors as a separate entry point to compile it as a separate file (in combination with the CommonsChunkPlugin).
+
+This is discouraged in webpack 4. Instead, the optimization.splitChunks option takes care of separating vendors and app modules and creating a separate file. Do not create an entry for vendors or other stuff that is not the starting point of execution.
+
+
+
+
+
+--------------------------------------------------------------------------------
+##Multi Page Application
+//webpack.config.js
+
+module.exports = {
+  entry: {
+    pageOne: './src/pageOne/index.js',
+    pageTwo: './src/pageTwo/index.js',
+    pageThree: './src/pageThree/index.js'
+  }
+};
+What does this do? We are telling webpack that we would like 3 separate dependency graphs (like the above example).
+
+Why? In a multi-page application, the server is going to fetch a new HTML document for you. The page reloads this new document and assets are redownloaded. However, this gives us the unique opportunity to do things like using optimization.splitChunks to create bundles of shared application code between each page. Multi-page applications that reuse a lot of code/modules between entry points can greatly benefit from these techniques, as the number of entry points increases.
+
+--------------------------------------------------------------------------------
+
+NOTE THAT::
+ -->https://webpack.js.org/concepts/module-resolution/
+
+-------------------------------------------------------------------------------
+
+MODULE FEDERATION IN WEBPACK:: it is also important topic that i left.
+------------------------------------------------------------------------------
+

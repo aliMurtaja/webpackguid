@@ -1,0 +1,1 @@
+export const file1 =()=> console.log('this is form file 1')
